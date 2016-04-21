@@ -33,7 +33,7 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y nginx
 
 ADD ./files/config/nginx.conf /etc/nginx/nginx.conf
-ADD ./files/config/default   /etc/nginx/sites-available/default
+ADD ./files/config/default.conf   /etc/nginx/sites-available/default
 
 #
 # php
