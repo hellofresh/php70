@@ -1,6 +1,6 @@
 # Base php 7.0 docker image
 
-[![Docker Repository on Quay](https://quay.io/repository/hellofresh/php70/status?token=4f1106f0-07a4-457d-95a2-b143611fe98c "Docker Repository on Quay")](https://quay.io/repository/hellofresh/php70)
+[![Docker Repository on Quay](https://quay.io/repository/hellofresh/php70/status?token=1f9cb0ee-31ab-4601-b4f3-f61c710c0e0e "Docker Repository on Quay")](https://quay.io/repository/hellofresh/php70)
 
 This should be used only as a based image for application specific images which want to use php 7.0.
 
