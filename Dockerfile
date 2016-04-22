@@ -64,6 +64,13 @@ RUN \
         php-pear \
         libsasl2-dev
 
+RUN mkdir -p /usr/local/openssl/include/openssl/ && \
+    ln -s /usr/include/openssl/evp.h /usr/local/openssl/include/openssl/evp.h && \
+    mkdir -p /usr/local/openssl/lib/ && \
+    ln -s /usr/lib/x86_64-linux-gnu/libssl.a /usr/local/openssl/lib/libssl.a && \
+    ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/local/openssl/lib/
+
+
 
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.0/fpm/php.ini
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.0/cli/php.ini
