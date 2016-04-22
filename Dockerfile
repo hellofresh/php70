@@ -48,22 +48,21 @@ RUN \
         php7.0-fpm \
         php7.0-cli \
         php7.0-common \
-        php7.0-curl \
-        php7.0-intl \
-        php7.0-mcrypt \
-        php7.0-mysql \
+        libpcre3-dev \
         php7.0-dev \
         php7.0-gd \
+        php7.0-curl \
+        php7.0-mcrypt \
+        php7.0-intl \
+        php7.0-mysql \
+        php7.0-pgsql \
         php7.0-mbstring \
         php7.0-json \
         php7.0-opcache \
         php7.0-xml \
-        libpcre3-dev \
         php7.0-odbc \
-        php7.0-pgsql \
-        php7.0-bz2 \
-        php7.0-zip \
-        php7.0-bcmath
+        php-pear \
+        libsasl2-dev
 
 
 RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.0/fpm/php.ini
