@@ -61,6 +61,7 @@ RUN \
         php7.0-opcache \
         php7.0-xml \
         php7.0-odbc \
+        php7.0-zip \
         php-pear \
         libsasl2-dev
 
