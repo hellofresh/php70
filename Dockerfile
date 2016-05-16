@@ -62,7 +62,7 @@ RUN \
         php7.0-xml \
         php7.0-odbc \
         php7.0-zip \
-        php7.0-bcmath \ # Required by php-amqplib
+        php7.0-bcmath \
         php-pear \
         libsasl2-dev
 
