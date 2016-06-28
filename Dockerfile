@@ -93,22 +93,21 @@ RUN chmod +x                    /etc/service/phpfpm/run
 RUN \
     php -r "readfile('https://getcomposer.org/installer');" | php && \
     mv composer.phar /usr/local/bin/composer
-    
+
 # Add xdebug cli/fpm
 RUN pecl install xdebug \
-    && echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/7.0/fpm/conf.d/20-xdebug.ini \
-    && echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/7.0/cli/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_enable=1" >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_handler=dbgp" >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_port=9000" >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_autostart=1" >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_connect_back=1" >> /etc/php/7.0/fpm/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_enable=1" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_handler=dbgp" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_port=9000" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_autostart=1" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini \
-    && echo "xdebug.remote_connect_back=1" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini \
-    && echo "xdebug.idekey=debugit" >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
+    && echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/7.0/mods-available/xdebug.ini \
+
+    && echo "xdebug.remote_enable=1" >> /etc/php/7.0/mods-available/xdebug.ini \
+    && echo "xdebug.remote_handler=dbgp" >> /etc/php/7.0/mods-available/xdebug.ini \
+    && echo "xdebug.remote_port=9000" >> /etc/php/7.0/mods-available/xdebug.ini \
+    && echo "xdebug.remote_autostart=1" >> /etc/php/7.0/mods-available/xdebug.ini \
+    && echo "xdebug.remote_connect_back=1" >> /etc/php/7.0/mods-available/xdebug.ini \
+    && echo "xdebug.idekey=debugit" >> /etc/php/7.0/mods-available/xdebug.ini \
+
+    && ln -s /etc/php/7.0/mods-available/xdebug.ini /etc/php/7.0/cli/conf.d/20-xdebug.ini \
+    && ln -s /etc/php/7.0/mods-available/xdebug.ini /etc/php/7.0/fpm/conf.d/20-xdebug.ini
+
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
