@@ -38,11 +38,11 @@ ADD ./files/config/default.conf   /etc/nginx/sites-available/default
 #
 # php
 #
-RUN \
-    apt-get install -y language-pack-en-base && \
-    LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php && \
-    apt-get update && \
-    apt-get install -y \
+RUN apt-get install -y language-pack-en-base
+RUN LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+
+RUN apt-get update \
+    && apt-get install -y \
         libapache2-mod-php7.0 \
         php7.0 \
         php7.0-fpm \
