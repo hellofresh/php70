@@ -89,7 +89,7 @@ RUN mkdir                       /etc/service/phpfpm
 ADD ./files/runit/phpfpm.sh     /etc/service/phpfpm/run
 RUN chmod +x                    /etc/service/phpfpm/run
 
-# Install composer
+# Install composer in latest version
 RUN \
     php -r "readfile('https://getcomposer.org/installer');" | php && \
     mv composer.phar /usr/local/bin/composer
