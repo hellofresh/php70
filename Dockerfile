@@ -89,9 +89,10 @@ RUN mkdir                       /etc/service/phpfpm
 ADD ./files/runit/phpfpm.sh     /etc/service/phpfpm/run
 RUN chmod +x                    /etc/service/phpfpm/run
 
-# Install composer
+# Install composer (1.3.1)
 RUN \
-    php -r "readfile('https://getcomposer.org/installer');" | php && \
+    wget --quiet https://getcomposer.org/download/1.3.1/composer.phar && \
+    chmod +x composer.phar && \
     mv composer.phar /usr/local/bin/composer
 
 # Add xdebug cli/fpm
