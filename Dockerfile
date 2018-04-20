@@ -48,28 +48,34 @@ RUN LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php && \
     apt-get install -y \
         libpcre3-dev \
         libsasl2-dev \
-        php7.0 \
-        php7.0-bcmath \
-        php7.0-cli \
-        php7.0-common \
-        php7.0-curl \
-        php7.0-dev \
-        php7.0-fpm \
-        php7.0-gd \
-        php7.0-intl \
-        php7.0-json \
-        php7.0-mbstring \
-        php7.0-mcrypt \
-        php7.0-mysql \
-        php7.0-odbc \
-        php7.0-opcache \
-        php7.0-phpdbg \
-        php7.0-pgsql \
-        php7.0-xml \
-        php7.0-zip \
+        libmcrypt-dev \
+        php7.2 \
+        php7.2-bcmath \
+        php7.2-cli \
+        php7.2-common \
+        php7.2-curl \
+        php7.2-dev \
+        php7.2-fpm \
+        php7.2-gd \
+        php7.2-intl \
+        php7.2-json \
+        php7.2-mbstring \
+        php7.2-mysql \
+        php7.2-odbc \
+        php7.2-opcache \
+        php7.2-phpdbg \
+        php7.2-pgsql \
+        php7.2-xml \
+        php7.2-zip \
         php-pear && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+        
+        # Add Mcrypt from PECL as it has been deprecated in PHP-7.2 but some of our projects might still need it
+        RUN pecl install mcrypt-1.0.1 \
+        && echo "extension=$(find /usr/lib/php/ -name mcrypt.so)" > /etc/php/7.2/mods-available/mcrypt.ini \
+        && ln -s /etc/php/7.2/mods-available/mcrypt.ini /etc/php/7.2/cli/conf.d/mcrypt.ini \
+        && ln -s /etc/php/7.2/mods-available/mcrypt.ini /etc/php/7.2/fpm/conf.d/mcrypt.ini
 
 RUN mkdir -p /usr/local/openssl/include/openssl/ && \
     ln -s /usr/include/openssl/evp.h /usr/local/openssl/include/openssl/evp.h && \
@@ -77,10 +83,10 @@ RUN mkdir -p /usr/local/openssl/include/openssl/ && \
     ln -s /usr/lib/x86_64-linux-gnu/libssl.a /usr/local/openssl/lib/libssl.a && \
     ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/local/openssl/lib/
 
-RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.0/fpm/php.ini
-RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.0/cli/php.ini
-RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.0/fpm/php-fpm.conf
-RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.0/fpm/php.ini
+RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.2/fpm/php.ini
+RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.2/cli/php.ini
+RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.2/fpm/php-fpm.conf
+RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.2/fpm/php.ini
 
 ADD ./files/public/index.php /server/http/public/index.php
 
@@ -99,15 +105,18 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     php -r "unlink('composer-setup.php');"
 
 # Add xdebug cli/fpm
-RUN pecl install xdebug && \
-    echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/7.0/mods-available/xdebug.ini && \
-    echo "xdebug.remote_enable=1" >> /etc/php/7.0/mods-available/xdebug.ini && \
-    echo "xdebug.remote_handler=dbgp" >> /etc/php/7.0/mods-available/xdebug.ini && \
-    echo "xdebug.remote_port=9000" >> /etc/php/7.0/mods-available/xdebug.ini && \
-    echo "xdebug.remote_autostart=1" >> /etc/php/7.0/mods-available/xdebug.ini && \
-    echo "xdebug.remote_connect_back=1" >> /etc/php/7.0/mods-available/xdebug.ini && \
-    echo "xdebug.idekey=debugit" >> /etc/php/7.0/mods-available/xdebug.ini && \
-    ln -s /etc/php/7.0/mods-available/xdebug.ini /etc/php/7.0/cli/conf.d/20-xdebug.ini && \
-    ln -s /etc/php/7.0/mods-available/xdebug.ini /etc/php/7.0/fpm/conf.d/20-xdebug.ini
+RUN pecl install xdebug \
+    && echo "zend_extension=$(find /usr/lib/php/ -name xdebug.so)" > /etc/php/7.2/mods-available/xdebug.ini \
+    && echo "xdebug.remote_enable=1" >> /etc/php/7.2/mods-available/xdebug.ini \
+    && echo "xdebug.remote_handler=dbgp" >> /etc/php/7.2/mods-available/xdebug.ini \
+    && echo "xdebug.remote_port=9000" >> /etc/php/7.2/mods-available/xdebug.ini \
+    && echo "xdebug.remote_autostart=1" >> /etc/php/7.2/mods-available/xdebug.ini \
+    && echo "xdebug.remote_connect_back=1" >> /etc/php/7.2/mods-available/xdebug.ini \
+    && echo "xdebug.idekey=debugit" >> /etc/php/7.2/mods-available/xdebug.ini \
+    && ln -s /etc/php/7.2/mods-available/xdebug.ini /etc/php/7.2/cli/conf.d/20-xdebug.ini \
+    && ln -s /etc/php/7.2/mods-available/xdebug.ini /etc/php/7.2/fpm/conf.d/20-xdebug.ini
+
+# Cleanup
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 80
